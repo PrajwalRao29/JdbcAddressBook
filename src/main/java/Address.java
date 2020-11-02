@@ -1,3 +1,5 @@
+import com.mysql.cj.protocol.*;
+
 import java.sql.*;
 import java.util.*;
 
@@ -72,7 +74,6 @@ public class Address {
         try {
             Connection connection = con.getConnection();
             Statement = connection.prepareStatement(sql);
-            ;
             Statement.setString(1, data);
             ResultSet r = Statement.executeQuery();
             while (r.next()) {
@@ -82,5 +83,40 @@ public class Address {
             throwables.printStackTrace();
         }
         return count;
+    }
+    public void Insert(Contact c)
+    {
+        String sql="insert into contact (id,first_name,last_name,phone_no,email) values (?,?,?,?,?);";
+        try {
+            int id=0;
+            Connection connection = con.getConnection();
+            Statement = connection.prepareStatement(sql);
+            Statement.setInt(1, c.id);
+            Statement.setString(2,c.first);
+            Statement.setString(3,c.last);
+            Statement.setString(4,c.phno);
+            Statement.setString(5,c.email);
+            Statement.executeUpdate();
+            //getting the contact id which is assigned by auto increment
+            Statement = connection.prepareStatement("select contact_id from contact where phone_no=?");
+            Statement.setString(1,c.phno);
+            ResultSet r=Statement.executeQuery();
+            while(r.next())
+            {
+                id=r.getInt(1);
+                break;
+            }
+            //using contact id to assign address table
+            Statement = connection.prepareStatement("insert into address (contact_id,address,city,state,zip,DOJ) values (?,?,?,?,?,?);");
+            Statement.setInt(1,id);
+            Statement.setString(2,c.address);
+            Statement.setString(3,c.city);
+            Statement.setString(4,c.state);
+            Statement.setString(5,c.zip);
+            Statement.setString(6,c.DOJ);
+            Statement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

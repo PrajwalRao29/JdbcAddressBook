@@ -19,4 +19,16 @@ public class TestAddressBook {
         Address a=new Address();
         Assert.assertEquals(4,a.findDoj("2015-01-01","2019-01-01"));
     }
+    @Test
+    public void test4CheckCity()
+    {
+        Address a=new Address();
+        Assert.assertEquals(1,a.RetriveField("city","g"));
+    }
+    @Test
+    public void test5CheckState()
+    {
+        Address a=new Address();
+        Assert.assertEquals(3,a.RetriveField("state","m"));
+    }
 }

@@ -17,8 +17,8 @@ public class Address {
         try
         {
             Connection connection=con.getConnection();
-            Statement=connection.prepareStatement("select * from employee where emp_id between ? and ?");
-            ResultSet result=Statement.executeQuery(sql);
+            Statement=connection.prepareStatement(sql);
+            ResultSet result=Statement.executeQuery();
             while(result.next())
             {
                 Contact c=new Contact();
@@ -37,6 +37,21 @@ public class Address {
         }
         return arr;
     }
+
+//    public void updateContact(String field,String data,int contact_id)
+//    {
+//        String sql="update contact c, address a set "+field+"=? where c.contact_id=a.contact_id and c.contact_id=?;";
+//        try
+//        {
+//            Connection connection=con.getConnection();
+//            Statement=connection.prepareStatement(sql);;
+//            Statement.setString(1,data);
+//            Statement.setInt(2,contact_id);
+//            Statement.executeUpdate();
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//    }
     static boolean checkDuplicate(AddressBook adbook, Contact contact) {
         return (adbook.ar.stream().anyMatch(c -> c.equals(contact)));
     }

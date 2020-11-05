@@ -119,4 +119,19 @@ public class Address {
             throwables.printStackTrace();
         }
     }
+
+    public void insertMultiple(ArrayList<Contact> arr) {
+        for(Contact c:arr) {
+            Runnable task = () -> {
+               Insert(c);
+            };
+            Thread thread = new Thread(task);
+            thread.start();
+            try {
+                thread.sleep(500);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
+    }
 }

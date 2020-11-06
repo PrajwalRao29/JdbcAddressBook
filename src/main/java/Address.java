@@ -5,7 +5,7 @@ import java.util.*;
 
 
 public class Address {
-    static Scanner sc = new Scanner(System.in);
+    static Scanner scanner = new Scanner(System.in);
     ConnectionRetriever con = new ConnectionRetriever();
     PreparedStatement Statement;
 
@@ -17,21 +17,22 @@ public class Address {
             Statement = connection.prepareStatement(sql);
             ResultSet result = Statement.executeQuery();
             while (result.next()) {
-                Contact c = new Contact();
-                c.first = result.getString("first_name");
-                c.last = result.getString("last_name");
-                c.address = result.getString("address");
-                c.email = result.getString("email");
-                c.phno = result.getString("phone_no");
-                c.city = result.getString("city");
-                c.state = result.getString("state");
-                c.zip = result.getString("zip");
-                arr.add(c);
+                Contact contact = new Contact();
+                contact.first = result.getString("first_name");
+                contact.last = result.getString("last_name");
+                contact.address = result.getString("address");
+                contact.email = result.getString("email");
+                contact.phno = result.getString("phone_no");
+                contact.city = result.getString("city");
+                contact.state = result.getString("state");
+                contact.zip = result.getString("zip");
+                arr.add(contact);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return arr;
+
     }
 
     public void updateContact(String field, String data, int contact_id) {
@@ -39,7 +40,6 @@ public class Address {
         try {
             Connection connection = con.getConnection();
             Statement = connection.prepareStatement(sql);
-            ;
             Statement.setString(1, data);
             Statement.setInt(2, contact_id);
             Statement.executeUpdate();
@@ -54,7 +54,6 @@ public class Address {
         try {
             Connection connection = con.getConnection();
             Statement = connection.prepareStatement(sql);
-            ;
             Statement.setString(1, start);
             Statement.setString(2, end);
             ResultSet r = Statement.executeQuery();
@@ -75,8 +74,8 @@ public class Address {
             Connection connection = con.getConnection();
             Statement = connection.prepareStatement(sql);
             Statement.setString(1, data);
-            ResultSet r = Statement.executeQuery();
-            while (r.next()) {
+            ResultSet resultSet = Statement.executeQuery();
+            while (resultSet.next()) {
                 count++;
             }
         } catch (SQLException throwables) {
@@ -84,36 +83,36 @@ public class Address {
         }
         return count;
     }
-    public void Insert(Contact c)
+    public void Insert(Contact contact)
     {
         String sql="insert into contact (id,first_name,last_name,phone_no,email) values (?,?,?,?,?);";
         try {
             int id=0;
             Connection connection = con.getConnection();
             Statement = connection.prepareStatement(sql);
-            Statement.setInt(1, c.id);
-            Statement.setString(2,c.first);
-            Statement.setString(3,c.last);
-            Statement.setString(4,c.phno);
-            Statement.setString(5,c.email);
+            Statement.setInt(1, contact.id);
+            Statement.setString(2,contact.first);
+            Statement.setString(3,contact.last);
+            Statement.setString(4,contact.phno);
+            Statement.setString(5,contact.email);
             Statement.executeUpdate();
             //getting the contact id which is assigned by auto increment
             Statement = connection.prepareStatement("select contact_id from contact where phone_no=?");
-            Statement.setString(1,c.phno);
-            ResultSet r=Statement.executeQuery();
-            while(r.next())
+            Statement.setString(1,contact.phno);
+            ResultSet resultSet=Statement.executeQuery();
+            while(resultSet.next())
             {
-                id=r.getInt(1);
+                id=resultSet.getInt(1);
                 break;
             }
             //using contact id to assign address table
             Statement = connection.prepareStatement("insert into address (contact_id,address,city,state,zip,DOJ) values (?,?,?,?,?,?);");
             Statement.setInt(1,id);
-            Statement.setString(2,c.address);
-            Statement.setString(3,c.city);
-            Statement.setString(4,c.state);
-            Statement.setString(5,c.zip);
-            Statement.setString(6,c.DOJ);
+            Statement.setString(2,contact.address);
+            Statement.setString(3,contact.city);
+            Statement.setString(4,contact.state);
+            Statement.setString(5,contact.zip);
+            Statement.setString(6,contact.DOJ);
             Statement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -121,9 +120,9 @@ public class Address {
     }
 
     public void insertMultiple(ArrayList<Contact> arr) {
-        for(Contact c:arr) {
+        for(Contact contact:arr) {
             Runnable task = () -> {
-               Insert(c);
+               Insert(contact);
             };
             Thread thread = new Thread(task);
             thread.start();

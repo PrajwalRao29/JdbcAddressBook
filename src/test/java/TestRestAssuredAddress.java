@@ -14,9 +14,9 @@ public class TestRestAssuredAddress {
     }
 
     @Test
-    public void test1WriteIntoJson() {
-        Address a = new Address();
-        List<Contact> contacts = a.readData();
+    public void test1GivenAddressBook_WhenWriteIntoJson_ShouldAddToServer() {
+        Address address = new Address();
+        List<Contact> contacts = address.readData();
         for (Contact e : contacts) {
             HashMap<String, String> map = new HashMap<>();
             String fname = e.first;
